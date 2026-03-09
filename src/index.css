@@ -1,0 +1,75 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
+
+:root {
+  --bg-dark: #0f172a; /* Azul marinho quase preto */
+  --card-bg: #1e293b; /* Cinza azulado escuro */
+  --accent: #38bdf8;  /* Azul neon para detalhes */
+  --text-main: #f8fafc;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Inter', sans-serif;
+  background: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%);
+  min-height: 100vh;
+  color: var(--text-main);
+  overflow-x: hidden;
+}
+
+/* Efeito de Vidro Escuro */
+.glass-card {
+  background: rgba(30, 41, 59, 0.7);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+}
+
+/* Estilizando a scrollbar da mochila */
+div::-webkit-scrollbar {
+  width: 5px;
+}
+div::-webkit-scrollbar-track {
+  background: transparent;
+}
+div::-webkit-scrollbar-thumb {
+  background: #334155;
+  border-radius: 10px;
+}
+div::-webkit-scrollbar-thumb:hover {
+  background: #38bdf8;
+}
+
+body {
+  user-select: none; /* Fiz isso para impedir selecionar o texto */
+  cursor: default;   /* Garante que o cursor seja a seta padrão */
+}
+
+/* Aqui eu fiz com que o cursor vire a mãozinha (pointer) */
+button, a, .clickable {
+  cursor: pointer;
+}
+
+* {
+  /* TAREFA 1: Remove o cursor de digitar texto de todo o site */
+  user-select: none; 
+  -webkit-user-select: none;
+}
+
+body {
+  margin: 0;
+  background-color: #020617;
+  color: white;
+  font-family: 'Inter', sans-serif;
+  /* Garante que o cursor padrão seja a seta */
+  cursor: default;
+}
+
+/* Garante que o cursor de "mãozinha" apareça apenas em itens clicáveis */
+button, 
+a, 
+svg, 
+[role="button"],
+.clickable {
+  cursor: pointer !important;
+}
