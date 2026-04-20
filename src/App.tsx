@@ -115,7 +115,10 @@ function Pokedex() {
       </motion.div>
 
       <footer style={{ textAlign: 'center', marginTop: '100px', color: 'rgba(255,255,255,0.5)' }}>
-        <p>Matheus Nascimento • Projeto Teus Poke ft. Luciano.</p>
+    <p className="text-green-500 font-bold border border-green-500 p-2 inline-block rounded">
+    Ambiente Configurado: Tailwind v4 OK!
+    </p>
+    <p>Matheus Nascimento • Projeto Teus Poke ft. Luciano.</p>
       </footer>
     </div>
   );
