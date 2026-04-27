@@ -4,106 +4,71 @@ import { fetchPokemons } from './api/pokemon';
 import { PokemonCard } from './components/PokemonCard';
 import { Backpack } from './components/Backpack';
 
-// 1. Configuração do Client do TanStack Query
 const queryClient = new QueryClient();
 
-// 2. Definição das animações do container (Stagger)
-// Isso faz com que os filhos (cards) apareçam um após o outro
 const containerVariants = {
   hidden: { opacity: 0 },
   show: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.15, // Delay entre a subida de cada card
+      staggerChildren: 0.15,
     },
   },
 };
 
 function Pokedex() {
-  // 3. Busca dos dados usando TanStack Query
   const { data, isLoading, isError } = useQuery({
     queryKey: ['pokemons'],
     queryFn: fetchPokemons,
   });
 
-  // Estado de Carregamento
   if (isLoading) {
     return (
-      <div style={{ 
-        display: 'flex', 
-        justifyContent: 'center', 
-        alignItems: 'center', 
-        height: '100vh',
-        color: '#fff',
-        fontSize: '1.5rem',
-        fontWeight: 'bold'
-      }}>
+      <div className="flex justify-center items-center h-screen text-white text-2xl font-bold">
         Carregando Pokédex Hunter...
       </div>
     );
   }
 
-  // Estado de Erro
   if (isError) {
     return (
-      <div style={{ color: '#ff7675', textAlign: 'center', marginTop: '100px' }}>
-        <h2>Erro ao carregar os Pokémons.</h2>
+      <div className="text-red-400 text-center mt-24">
+        <h2 className="text-2xl font-bold">Erro ao carregar os Pokémons.</h2>
         <p>Verifique sua conexão ou a API.</p>
       </div>
     );
   }
 
   return (
-    <div style={{ 
-      maxWidth: '1200px', 
-      margin: '0 auto', 
-      padding: '60px 20px',
-      position: 'relative' 
-    }}>
+    <div className="max-w-[1200px] mx-auto px-5 py-16 relative min-h-screen">
       
-      {/* Componente da Mochila fixa no topo */}
       <Backpack />
 
-      <header style={{ textAlign: 'center', marginBottom: '80px' }}>
-
-      <motion.h1 
-  initial={{ letterSpacing: "0px", opacity: 0 }}
-  animate={{ letterSpacing: "10px", opacity: 1 }}
-  transition={{ duration: 1 }}
-  style={{ 
-    fontSize: '3.5rem', 
-    color: '#fff',
-    fontWeight: '900',
-    textAlign: 'center',
-    textTransform: 'uppercase',
-    background: 'linear-gradient(to bottom, #fff 0%, #64748b 100%)',
-    WebkitBackgroundClip: 'text',
-    WebkitTextFillColor: 'transparent',
-    filter: 'drop-shadow(0 5px 15px rgba(0,0,0,0.5))'
-  }}
->
-  TEUS POKE
+      <header className="text-center mb-20">
+        <motion.h1 
+          initial={{ letterSpacing: "0px", opacity: 0 }}
+          animate={{ letterSpacing: "10px", opacity: 1 }}
+          transition={{ duration: 1 }}
+          className="text-6xl md:text-7xl font-black text-center uppercase bg-gradient-to-b from-white to-slate-500 bg-clip-text text-transparent drop-shadow-[0_5px_15px_rgba(0,0,0,0.5)]"
+        >
+          TEUS POKE
         </motion.h1>
+        
         <motion.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5 }}
-          style={{ fontSize: '1.2rem', color: '#eee', marginTop: '10px' }}
+          className="text-lg text-slate-200 mt-3"
         >
           Encontre e capture os 10 primeiros da região!
         </motion.p>
       </header>
 
-      {/* Grid Animada dos Pokémons */}
       <motion.div 
         variants={containerVariants}
         initial="hidden"
         animate="show"
-        style={{ 
-          display: 'grid', 
-          gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', 
-          gap: '40px' 
-        }}
+        className="grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-10"
       >
         {data?.map((poke, index) => (
           <PokemonCard 
@@ -114,17 +79,13 @@ function Pokedex() {
         ))}
       </motion.div>
 
-      <footer style={{ textAlign: 'center', marginTop: '100px', color: 'rgba(255,255,255,0.5)' }}>
-    <p className="text-green-500 font-bold border border-green-500 p-2 inline-block rounded">
-    Ambiente Configurado: Tailwind v4 OK!
-    </p>
-    <p>Matheus Nascimento • Projeto Teus Poke ft. Luciano.</p>
+      <footer className="text-center mt-24 text-white/50 pb-10">
+        <p>Matheus Nascimento • Projeto Teus Poke ft. Luciano.</p>
       </footer>
     </div>
   );
 }
 
-// 4. Componente Principal que envolve a aplicação com o Provider
 export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
