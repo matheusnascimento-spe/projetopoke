@@ -10,123 +10,116 @@ export const Backpack = () => {
 
   return (
     <>
-      {/* 1. BOTÃO FLUTUANTE (HUD) - Mantido exatamente como era */}
+    
       <motion.div
         onClick={() => setIsOpen(true)}
         whileHover={{ scale: 1.05, boxShadow: "0 0 20px rgba(56, 189, 248, 0.4)" }}
         whileTap={{ scale: 0.95 }}
-        style={{
-          position: 'fixed', bottom: '30px', right: '30px', zIndex: 100,
-          cursor: 'pointer', padding: '12px 24px', borderRadius: '16px',
-          backgroundColor: 'rgba(15, 23, 42, 0.9)', border: '1px solid #38bdf8',
-          color: '#38bdf8', backdropFilter: 'blur(12px)', display: 'flex',
-          alignItems: 'center', gap: '12px', boxShadow: '0 10px 30px rgba(0, 0, 0, 0.3)',
-        }}
+        className="fixed bottom-[30px] right-[30px] z-[100] cursor-pointer px-6 py-3 rounded-2xl bg-slate-900/90 border border-sky-400 text-sky-400 backdrop-blur-xl flex items-center gap-3 shadow-2xl"
       >
         <ShoppingBag size={22} />
-        <span style={{ fontWeight: '900', letterSpacing: '1px' }}>
-          {count} <span style={{ fontSize: '0.8rem', opacity: 0.7 }}>UNIDADES</span>
+        <span className="font-black tracking-wider uppercase">
+          {count} <span className="text-[0.8rem] opacity-70">Unidades</span>
         </span>
       </motion.div>
 
       <AnimatePresence>
         {isOpen && (
           <>
+            {/* Overlay (Fundo escuro) */}
             <motion.div
-              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
               onClick={() => setIsOpen(false)}
-              style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0, 0, 0, 0.7)', zIndex: 1000, backdropFilter: 'blur(6px)' }}
+              className="fixed inset-0 bg-black/70 z-[1000] backdrop-blur-sm"
             />
 
+            {/* Sidebar da Mochila */}
             <motion.div
-              initial={{ x: '100%' }} animate={{ x: 0 }} exit={{ x: '100%' }}
+              initial={{ x: '100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '100%' }}
               transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-              style={{
-                position: 'fixed', right: 0, top: 0, bottom: 0, width: '100%', maxWidth: '400px',
-                backgroundColor: '#0f172a', zIndex: 1001, padding: '40px 30px',
-                boxShadow: '-10px 0 40px rgba(0, 0, 0, 0.6)', display: 'flex',
-                flexDirection: 'column', borderLeft: '2px solid #38bdf8'
-              }}
+              className="fixed right-0 top-0 bottom-0 w-full max-w-[400px] bg-slate-950 z-[1001] p-10 flex flex-col border-l-2 border-sky-400 shadow-[-10px_0_40px_rgba(0,0,0,0.6)]"
             >
               {/* Cabeçalho */}
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '30px' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                  <Database size={20} color="#38bdf8" />
-                  <h2 style={{ color: '#fff', margin: 0, fontSize: '1.2rem', letterSpacing: '3px', fontWeight: '900' }}>
-                    MOCHILA
+              <div className="flex justify-between items-center mb-8">
+                <div className="flex items-center gap-[10px]">
+                  <Database size={20} className="text-sky-400" />
+                  <h2 className="text-white text-xl tracking-[3px] font-black uppercase">
+                    Mochila
                   </h2>
                 </div>
-                <X color="#94a3b8" style={{ cursor: 'pointer' }} onClick={() => setIsOpen(false)} />
+                <X className="text-slate-400 cursor-pointer hover:text-white transition-colors" onClick={() => setIsOpen(false)} />
               </div>
 
-              {/* NOVA OPÇÃO: Botão Esvaziar (Aparece logo acima da lista) */}
+              {/* Botão Esvaziar */}
               {count > 0 && (
                 <motion.button
-                  initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
                   whileHover={{ backgroundColor: 'rgba(239, 68, 68, 0.1)', borderColor: '#ef4444' }}
                   onClick={removeAll}
-                  style={{
-                    backgroundColor: 'transparent', border: '1px solid rgba(239, 68, 68, 0.4)',
-                    color: '#ef4444', padding: '10px', borderRadius: '8px', cursor: 'pointer',
-                    marginBottom: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    gap: '8px', fontSize: '0.75rem', fontWeight: 'bold', transition: '0.2s'
-                  }}
+                  className="bg-transparent border border-red-500/40 text-red-500 p-2.5 rounded-lg cursor-pointer mb-5 flex items-center justify-center gap-2 text-[0.75rem] font-bold transition-all"
                 >
                   <Trash size={14} /> ESVAZIAR TUDO
                 </motion.button>
               )}
 
               {/* Lista Animada */}
-              <div style={{ flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '12px', paddingRight: '10px' }}>
+              <div className="flex-1 overflow-y-auto flex flex-col gap-3 pr-2 custom-scrollbar">
                 {count === 0 ? (
-                  <div style={{ textAlign: 'center', marginTop: '100px', color: '#475569' }}>
-                    <ShoppingBag size={48} style={{ opacity: 0.2, marginBottom: '15px' }} />
+                  <div className="text-center mt-24 text-slate-500 flex flex-col items-center">
+                    <ShoppingBag size={48} className="opacity-20 mb-4" />
                     <p>Nenhum dado detectado.</p>
                   </div>
                 ) : (
                   <AnimatePresence>
                     {capturedPokemons.map((name, index) => (
                       <motion.div
-                        key={name} layout
-                        initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }}
-                        exit={{ opacity: 0, scale: 0.9 }} transition={{ delay: index * 0.05 }}
+                        key={name}
+                        layout
+                        initial={{ opacity: 0, x: 50 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, scale: 0.9 }}
+                        transition={{ delay: index * 0.05 }}
                         whileHover={{ x: -8, backgroundColor: 'rgba(56, 189, 248, 0.05)' }}
-                        style={{
-                          padding: '16px', backgroundColor: 'rgba(255, 255, 255, 0.02)',
-                          borderRadius: '12px', display: 'flex', justifyContent: 'space-between',
-                          alignItems: 'center', border: '1px solid rgba(255, 255, 255, 0.05)',
-                        }}
+                        className="p-4 bg-white/5 rounded-xl flex justify-between items-center border border-white/5"
                       >
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
-                          <div style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#38bdf8', boxShadow: '0 0 10px #38bdf8' }} />
-                          <span style={{ color: '#fff', textTransform: 'uppercase', fontWeight: '600', fontSize: '0.85rem' }}>
+                        <div className="flex items-center gap-4">
+                          <div className="w-1.5 h-1.5 rounded-full bg-sky-400 shadow-[0_0_10px_#38bdf8]" />
+                          <span className="text-white uppercase font-semibold text-[0.85rem]">
                             {name}
                           </span>
                         </div>
-                        <Trash2 size={18} color="#475569" style={{ cursor: 'pointer' }} onClick={() => remove(name)} />
+                        <Trash2 
+                          size={18} 
+                          className="text-slate-500 cursor-pointer hover:text-red-400 transition-colors" 
+                          onClick={() => remove(name)} 
+                        />
                       </motion.div>
                     ))}
                   </AnimatePresence>
                 )}
               </div>
 
-              {/* O RODAPÉ QUE TINHA SUMIDO (BOTÃO AZUL) */}
-              <div style={{ marginTop: '30px', paddingTop: '20px', borderTop: '1px solid rgba(255, 255, 255, 0.1)' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px', color: '#94a3b8', fontSize: '0.9rem' }}>
+              {/* Rodapé */}
+              <div className="mt-8 pt-5 border-t border-white/10">
+                <div className="flex justify-between mb-5 text-slate-400 text-[0.9rem]">
                   <span>Total capturados:</span>
-                  <span style={{ color: '#fff', fontWeight: 'bold' }}>{count}</span>
+                  <span className="text-white font-bold">{count}</span>
                 </div>
                 <motion.button 
                   whileHover={count > 0 ? { scale: 1.02, backgroundColor: '#7dd3fc' } : {}}
                   whileTap={count > 0 ? { scale: 0.98 } : {}}
                   disabled={count === 0}
-                  style={{
-                    width: '100%', padding: '16px', borderRadius: '12px',
-                    backgroundColor: count > 0 ? '#38bdf8' : '#334155',
-                    color: '#0f172a', border: 'none', fontWeight: '900',
-                    cursor: count > 0 ? 'pointer' : 'not-allowed', textTransform: 'uppercase',
-                    letterSpacing: '2px', transition: 'all 0.3s ease'
-                  }}
+                  className={`
+                    w-full p-4 rounded-xl font-black uppercase tracking-[2px] transition-all duration-300
+                    ${count > 0 
+                      ? 'bg-sky-400 text-slate-950 cursor-pointer shadow-lg' 
+                      : 'bg-slate-700 text-slate-900 cursor-not-allowed'}
+                  `}
                 >
                   Adquirir Pokemons
                 </motion.button>

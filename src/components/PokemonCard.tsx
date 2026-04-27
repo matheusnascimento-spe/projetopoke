@@ -3,11 +3,10 @@ import { useState } from 'react';
 import Confetti from 'react-dom-confetti';
 import { usePokemonStore } from '../store/usePokemonStore';
 
-// 1. Criei uma Interface (Contrato) para o componente
 interface PokemonCardProps {
   name: string;
   id: number;
-  url?: string; // O '?' diz que a url é opcional, assim o TS para de reclamar "Gemini me ajudou a entender"
+  url?: string;
 }
 
 const confettiConfig = {
@@ -24,7 +23,6 @@ const confettiConfig = {
   colors: ["#a864fd", "#29cdff", "#78ff44", "#ff718d", "#fdff6a"]
 };
 
-// 2.// Apliquei a interface aqui
 export const PokemonCard = ({ name, id }: PokemonCardProps) => {
   const { capture, capturedPokemons } = usePokemonStore();
   const isCaptured = capturedPokemons.includes(name);
@@ -40,43 +38,37 @@ export const PokemonCard = ({ name, id }: PokemonCardProps) => {
 
   return (
     <motion.div 
-      whileHover={{ scale: 1.05, rotateY: 20 }} // Inclinação 3D
+      whileHover={{ scale: 1.05, rotateY: 20 }}
       initial={{ opacity: 0, scale: 0.9 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ type: "spring", stiffness: 300 }}
-      style={{
-        padding: '20px',
-        borderRadius: '20px',
-        textAlign: 'center',
-        background: isCaptured ? 'linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%)' : '#fff',
-        boxShadow: '0 10px 30px rgba(0,0,0,0.1)',
-        perspective: '1000px',
-        border: isCaptured ? '2px solid #10b981' : '1px solid #eee'
-      }}
+      
+      className={`
+        p-5 rounded-[20px] text-center shadow-2xl transition-all duration-300 [perspective:1000px]
+        ${isCaptured 
+          ? 'bg-gradient-to-br from-emerald-100 to-emerald-200 border-2 border-emerald-500' 
+          : 'bg-white border border-gray-100'}
+      `}
     >
       <img 
         src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${id}.png`} 
         alt={name} 
-        style={{ width: '140px', filter: isCaptured ? 'none' : 'grayscale(30%)' }} 
+        className={`w-[140px] mx-auto transition-all ${isCaptured ? 'grayscale-0' : 'grayscale-[30%]'}`}
       />
       
-      <h3 style={{ textTransform: 'capitalize', color: '#333', fontSize: '1.2rem' }}>{name}</h3>
+      <h3 className="capitalize text-gray-800 text-xl font-bold mt-2">{name}</h3>
 
-      <div style={{ position: 'relative', display: 'flex', justifyContent: 'center', marginTop: '15px' }}>
+      <div className="relative flex justify-center mt-4">
         <Confetti active={confettiActive} config={confettiConfig} />
         <button 
           onClick={handleCapture}
           disabled={isCaptured}
-          style={{
-            backgroundColor: isCaptured ? '#10b981' : '#3b82f6',
-            color: 'white',
-            border: 'none',
-            padding: '8px 24px',
-            borderRadius: '50px',
-            cursor: isCaptured ? 'default' : 'pointer',
-            fontWeight: 'bold',
-            boxShadow: '0 4px 10px rgba(0,0,0,0.1)'
-          }}
+          className={`
+            px-6 py-2 rounded-full font-bold transition-all shadow-md
+            ${isCaptured 
+              ? 'bg-emerald-500 text-white cursor-default' 
+              : 'bg-blue-500 text-white hover:bg-blue-600 cursor-pointer active:scale-95'}
+          `}
         >
           {isCaptured ? 'Capturado!' : 'Capturar'}
         </button>
