@@ -3,10 +3,15 @@ import { useState } from 'react';
 import Confetti from 'react-dom-confetti';
 import { usePokemonStore } from '../store/usePokemonStore';
 
-interface PokemonCardProps {
+export interface Pokemon {
   name: string;
-  id: number;
-  url?: string;
+  url: string;
+  id?: number;
+  image?: string;
+}
+
+interface PokemonCardProps {
+  pokemon: Pokemon;
 }
 
 const confettiConfig = {
@@ -23,14 +28,16 @@ const confettiConfig = {
   colors: ["#a864fd", "#29cdff", "#78ff44", "#ff718d", "#fdff6a"]
 };
 
-export const PokemonCard = ({ name, id }: PokemonCardProps) => {
+export const PokemonCard = ({ pokemon }: PokemonCardProps) => {
   const { capture, capturedPokemons } = usePokemonStore();
-  const isCaptured = capturedPokemons.includes(name);
+  
+  // Lógica de captura baseada no nome (vinda do seu Store)
+  const isCaptured = capturedPokemons.includes(pokemon.name);
   const [confettiActive, setConfettiActive] = useState(false);
 
   const handleCapture = () => {
     if (!isCaptured) {
-      capture(name);
+      capture(pokemon.name);
       setConfettiActive(true);
       setTimeout(() => setConfettiActive(false), 100);
     }
@@ -51,12 +58,14 @@ export const PokemonCard = ({ name, id }: PokemonCardProps) => {
       `}
     >
       <img 
-        src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${id}.png`} 
-        alt={name} 
+        src={pokemon.image} 
+        alt={pokemon.name} 
         className={`w-[140px] mx-auto transition-all ${isCaptured ? 'grayscale-0' : 'grayscale-[30%]'}`}
       />
       
-      <h3 className="capitalize text-gray-800 text-xl font-bold mt-2">{name}</h3>
+      <h3 className="capitalize text-gray-800 text-xl font-bold mt-2">{pokemon.name}</h3>
+      
+      <span className="text-gray-400 text-sm">#{pokemon.id}</span>
 
       <div className="relative flex justify-center mt-4">
         <Confetti active={confettiActive} config={confettiConfig} />

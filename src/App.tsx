@@ -1,10 +1,7 @@
-import { useQuery, QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
-import { fetchPokemons } from './api/pokemon';
+import { usePokemons } from './hooks/usePokemons';
 import { PokemonCard } from './components/PokemonCard';
 import { Backpack } from './components/Backpack';
-
-const queryClient = new QueryClient();
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -17,24 +14,13 @@ const containerVariants = {
 };
 
 function Pokedex() {
-  const { data, isLoading, isError } = useQuery({
-    queryKey: ['pokemons'],
-    queryFn: fetchPokemons,
-  });
 
-  if (isLoading) {
+  const { pokemons, loading } = usePokemons();
+
+  if (loading) {
     return (
       <div className="flex justify-center items-center h-screen text-white text-2xl font-bold">
         Carregando Pokédex Hunter...
-      </div>
-    );
-  }
-
-  if (isError) {
-    return (
-      <div className="text-red-400 text-center mt-24">
-        <h2 className="text-2xl font-bold">Erro ao carregar os Pokémons.</h2>
-        <p>Verifique sua conexão ou a API.</p>
       </div>
     );
   }
@@ -60,7 +46,7 @@ function Pokedex() {
           transition={{ delay: 0.5 }}
           className="text-lg text-slate-200 mt-3"
         >
-          Encontre e capture os 10 primeiros da região!
+          Encontre e capture os Pokémons da região!
         </motion.p>
       </header>
 
@@ -70,11 +56,10 @@ function Pokedex() {
         animate="show"
         className="grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-10"
       >
-        {data?.map((poke, index) => (
+        {pokemons.map((pokemon) => (
           <PokemonCard 
-            key={poke.name} 
-            name={poke.name} 
-            id={index + 1} 
+            key={pokemon.id} 
+            pokemon={pokemon} 
           />
         ))}
       </motion.div>
@@ -88,8 +73,6 @@ function Pokedex() {
 
 export default function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <Pokedex />
-    </QueryClientProvider>
+    <Pokedex />
   );
 }
